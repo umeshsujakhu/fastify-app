@@ -1,0 +1,44 @@
+{
+  "name": "fastify-app",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "pretest": "npm run lint",
+    "test": "tap \"test/**/*.test.js\"",
+    "start": "fastify start -l info --options app.js",
+    "dev": "npm run start -- --watch --pretty-logs --debug",
+    "mongo:start": "sudo docker run -d -p 27017:27017 --rm --name fastify-mongo mongo:6",
+    "mongo:stop": "sudo docker container stop fastify-mongo"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/autoload": "^5.0.0",
+    "@fastify/cors": "^8.3.0",
+    "@fastify/env": "^4.2.0",
+    "@fastify/jwt": "^7.2.0",
+    "@fastify/mongodb": "^7.0.0",
+    "@fastify/multipart": "^7.7.3",
+    "@fastify/sensible": "^5.0.0",
+    "@fastify/swagger": "^8.8.0",
+    "@fastify/swagger-ui": "^1.9.3",
+    "csv-parse": "^5.5.0",
+    "csv-stringify": "^6.4.2",
+    "fastify": "^4.0.0",
+    "fastify-cli": "^5.8.0",
+    "fastify-plugin": "^4.0.0"
+  },
+  "devDependencies": {
+    "dockerode": "^3.3.5",
+    "form-auto-content": "^3.2.0",
+    "standard": "^17.1.0",
+    "tap": "^16.1.0"
+  }
+}
