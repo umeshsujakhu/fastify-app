@@ -4,7 +4,9 @@ const t = require("tap");
 const { buildApp } = require("./helper");
 
 t.test("the alive route is online", async (t) => {
-  const app = await buildApp(t);
+  const app = await buildApp(t, {
+    MONGO_URL: 'mongodb://root:root@localhost:27017/basis-test-db?authSource=admin'
+  })
   const response = await app.inject({
     method: "GET",
     url: "/",
@@ -15,7 +17,7 @@ t.test("the alive route is online", async (t) => {
 t.test("the application should start", async (t) => {
   const app = await buildApp(t, {
     MONGO_URL:
-      "mongodb://root:root@localhost:27017/todos-test?authSource=admin",
+      "mongodb://root:root@localhost:27017/basis-test-db?authSource=admin",
   });
   await app.ready();
   t.pass("the application is ready");
