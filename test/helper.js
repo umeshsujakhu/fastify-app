@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-const fcli = require("fastify-cli/helper");
-const startArgs = "-l info --options app.js";
+const fcli = require('fastify-cli/helper');
+const startArgs = '-l info --options app.js';
 
 const defaultEnv = {
-  NODE_ENV: "test",
-  MONGO_URL: "mongodb://root:root@localhost:27017/todos-test?authSource=admin",
-  JWT_SECRET: "secret123",
+  NODE_ENV: 'test',
+  MONGO_URL: 'mongodb://root:root@localhost:27017/todos-test?authSource=admin',
+  JWT_SECRET: 'secret123',
 };
 
 // Fill in this config with all the configurations
