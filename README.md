@@ -51,6 +51,12 @@ Example:
 
 > Our CI/CD pipeline is based on XXX and it will deploy the application whenever a new merge is detected in the `main` branch.
 
+
+## Docker
+```
+docker-compose -f docker-compose-test.yml up
+```
+
 ## Need help?
 
 Contact your colleagues at hi@help.com
