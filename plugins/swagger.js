@@ -1,18 +1,18 @@
-"use strict";
+'use strict'
 
-const fp = require("fastify-plugin");
-const fastifySwagger = require("@fastify/swagger");
-const SwaggerUI = require("@fastify/swagger-ui");
-const pkg = require("../package.json");
+const fp = require('fastify-plugin')
+const fastifySwagger = require('@fastify/swagger')
+const SwaggerUI = require('@fastify/swagger-ui')
+const pkg = require('../package.json')
 
 module.exports = fp(
-  async function swaggerPlugin(fastify, opts) {
+  async function swaggerPlugin (fastify, opts) {
     fastify.register(fastifySwagger, {
       openapi: {
         info: {
-          title: "Fastify app",
-          description: "Fastify Book examples",
-          version: pkg.version,
+          title: 'Fastify app',
+          description: 'Fastify Book examples',
+          version: pkg.version
         },
         // servers: [
         //   {
@@ -22,19 +22,19 @@ module.exports = fp(
         components: {
           securitySchemes: {
             bearerAuth: {
-              type: "http",
-              scheme: "bearer",
-              bearerFormat: "JWT",
-            },
-          },
-        },
-      },
-    });
-    if (fastify.secrets.NODE_ENV !== "production") {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT'
+            }
+          }
+        }
+      }
+    })
+    if (fastify.secrets.NODE_ENV !== 'production') {
       fastify.register(SwaggerUI, {
-        routePrefix: "/docs",
-      });
+        routePrefix: '/docs'
+      })
     }
   },
-  { dependencies: ["application-config"] }
-);
+  { dependencies: ['application-config'] }
+)

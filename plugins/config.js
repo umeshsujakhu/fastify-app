@@ -1,18 +1,18 @@
-"use strict";
+'use strict'
 
-const fp = require("fastify-plugin");
-const fastifyEnv = require("@fastify/env");
+const fp = require('fastify-plugin')
+const fastifyEnv = require('@fastify/env')
 
 module.exports = fp(
-  async function configLoader(fastify, opts) {
+  async function configLoader (fastify, opts) {
     await fastify.register(fastifyEnv, {
-      confKey: "secrets",
+      confKey: 'secrets',
       data: opts.configData,
-      schema: fastify.getSchema("schema:dotenv"),
-    });
+      schema: fastify.getSchema('schema:dotenv')
+    })
   },
   {
-    name: "application-config",
-    dependencies: ["application-schemas"]
+    name: 'application-config',
+    dependencies: ['application-schemas']
   }
-);
+)

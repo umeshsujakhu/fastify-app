@@ -1,121 +1,121 @@
-"use strict";
+'use strict'
 
-const fastifyMultipart = require("@fastify/multipart");
-const { parse: csvParse } = require("csv-parse");
-const { stringify: csvStringify } = require("csv-stringify");
+const fastifyMultipart = require('@fastify/multipart')
+const { parse: csvParse } = require('csv-parse')
+const { stringify: csvStringify } = require('csv-stringify')
 
-module.exports = async function fileTodoRoutes(fastify, _opts) {
+module.exports = async function fileTodoRoutes (fastify, _opts) {
   await fastify.register(fastifyMultipart, {
-    attachFieldsToBody: "keyValues",
-    sharedSchemaId: "schema:todo:import:file",
-    async onFile(part) {
-      const lines = [];
+    attachFieldsToBody: 'keyValues',
+    sharedSchemaId: 'schema:todo:import:file',
+    async onFile (part) {
+      const lines = []
 
       const stream = part.file.pipe(
         csvParse({
           bom: true,
           skip_empty_lines: true,
           trim: true,
-          columns: true,
+          columns: true
         })
-      );
+      )
 
       for await (const line of stream) {
         lines.push({
           title: line.title,
-          done: line.done === "true",
-        });
+          done: line.done === 'true'
+        })
       }
 
-      part.value = lines;
+      part.value = lines
     },
     limits: {
       fieldNameSize: 50,
       fieldSize: 100,
       fields: 10,
       fileSize: 1_000_000, // The max file size in bytes (1MB)
-      files: 1,
-    },
-  });
-  fastify.addHook("onRequest", fastify.authenticate);
+      files: 1
+    }
+  })
+  fastify.addHook('onRequest', fastify.authenticate)
 
   fastify.route({
-    method: "POST",
-    url: "/import",
+    method: 'POST',
+    url: '/import',
     schema: {
       security: [{ bearerAuth: [] }],
-      tags: ["ToDo"],
+      tags: ['ToDo'],
       body: {
-        type: "object",
-        required: ["todoListFile"],
+        type: 'object',
+        required: ['todoListFile'],
         description:
-          "Import a todo list from a CSV file with the following format: title,done",
+          'Import a todo list from a CSV file with the following format: title,done',
         properties: {
           todoListFile: {
-            type: "array",
+            type: 'array',
             items: {
-              type: "object",
-              required: ["title", "done"],
+              type: 'object',
+              required: ['title', 'done'],
               properties: {
-                title: { type: "string" },
-                done: { type: "boolean" },
-              },
-            },
-          },
-        },
+                title: { type: 'string' },
+                done: { type: 'boolean' }
+              }
+            }
+          }
+        }
       },
       response: {
         201: {
-          type: "array",
-          items: fastify.getSchema("schema:todo:create:response"),
-        },
-      },
+          type: 'array',
+          items: fastify.getSchema('schema:todo:create:response')
+        }
+      }
     },
-    handler: async function listTodo(request, reply) {
+    handler: async function listTodo (request, reply) {
       const inserted = await request.todosDataSource.createTodos(
         request.body.todoListFile
-      );
-      reply.code(201);
-      return inserted;
-    },
-  });
+      )
+      reply.code(201)
+      return inserted
+    }
+  })
 
   fastify.route({
-    method: "GET",
-    url: "/export",
+    method: 'GET',
+    url: '/export',
     schema: {
       security: [{ bearerAuth: [] }],
-      tags: ["ToDo"],
-      querystring: fastify.getSchema("schema:todo:list:export"),
+      tags: ['ToDo'],
+      querystring: fastify.getSchema('schema:todo:list:export')
     },
-    handler: async function listTodo(request, reply) {
-      const { title } = request.query;
+    handler: async function listTodo (request, reply) {
+      const { title } = request.query
 
       // We manage the cursor as the data could be huge
       const cursor = await request.todosDataSource.listTodos({
         filter: { title },
         skip: 0,
         limit: undefined,
-        asStream: true,
-      });
+        asStream: true
+      })
 
       reply.header(
-        "Content-Disposition",
+        'Content-Disposition',
         'attachment; filename="todo-list.csv"'
-      );
-      reply.type("text/csv");
+      )
+      reply.type('text/csv')
 
       return cursor.pipe(
         csvStringify({
           quoted_string: true,
           header: true,
-          columns: ["title", "done", "createdAt", "modifiedAt", "id"],
+          columns: ['title', 'done', 'createdAt', 'modifiedAt', 'id'],
           cast: {
-            boolean: (value) => (value ? "true" : "false"),
-            date: (value) => value.toISOString(),
-          },
+            boolean: (value) => (value ? 'true' : 'false'),
+            date: (value) => value.toISOString()
+          }
         })
-      );
-    },
-  });
-};
+      )
+    }
+  })
+}
